@@ -11,9 +11,27 @@
   const MIN_LOADER_DURATION = 2000; // 2 secondes
 
   onMount(() => {
-    // Toujours afficher le loader à chaque chargement de page
-    showLoader = true;
-    loaderStartTime = Date.now();
+    // Afficher le loader long seulement à la première visite (session)
+    const hasVisited = sessionStorage.getItem("hasVisited");
+    
+    if (!hasVisited) {
+      showLoader = true;
+      loaderStartTime = Date.now();
+      sessionStorage.setItem("hasVisited", "true");
+    } else {
+      showLoader = false;
+      loaderComplete = true;
+      
+      // Animer directement l'entrée du contenu
+      setTimeout(() => {
+        gsap.from(".page-content", {
+          opacity: 0,
+          y: 30,
+          duration: 1,
+          ease: "power3.out",
+        });
+      }, 50);
+    }
   });
 
   function handleLoaderComplete() {
@@ -52,20 +70,16 @@
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Maryline Biloa",
-  "url": "https://tonsite.com",
+  "url": "https://marylinebiloa.com",
   "sameAs": [
-    "https://github.com/tonprofil",
-    "https://linkedin.com/in/tonprofil"
+    "https://github.com/marylineb",
+    "https://linkedin.com/in/maryline-biloa"
   ]
 }
 </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin="anonymous"
-  />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Noto+Serif+JP:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
 </svelte:head>
 
 {#if showLoader}
