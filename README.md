@@ -1,38 +1,56 @@
-# sv
+# Portfolio — Maryline Biloa
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Mon portfolio de développeuse web : projets, parcours, CV et contact.
+Étudiante en Bachelor Développement Web à MyDigitalSchool Lyon.
 
-## Creating a project
+**En ligne :** https://marylinebiloa.com
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Stack
 
-```sh
-# create a new project in the current directory
-npx sv create
+SvelteKit · Svelte 5 · GSAP · Vercel
 
-# create a new project in my-app
-npx sv create my-app
-```
+## Pages
 
-## Developing
+| Route | Contenu |
+| --- | --- |
+| `/` | Accueil et présentation |
+| `/work` | Tous les projets, avec une page détaillée par projet |
+| `/about` | Parcours, compétences, CV à télécharger |
+| `/contact` | Formulaire qui ouvre la messagerie du visiteur (`mailto:`), sans serveur |
+| `/mentions-legales`, `/politique-confidentialite` | Pages légales |
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Projets présentés : Crimson Crypt (SvelteKit, Supabase), jeu UNO (Symfony), jeu de plateau échecs et dames (PHP), memory card (PHP), refonte du restaurant Paul Bert (SCSS), premiers sites front-end, stage de community management chez Garde ma Licorne.
 
-```sh
+## Lancer le projet
+
+```bash
+git clone https://github.com/marylineb/portfolio-sveltekit.git
+cd portfolio-sveltekit
+npm install
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+Aucune variable d'environnement n'est nécessaire.
 
-To create a production version of your app:
+## Structure
 
-```sh
-npm run build
+```text
+src/
+├── lib/
+│   ├── components/      # en-tête et écran de chargement
+│   └── data/
+│       └── projects.ts  # liste des projets affichés sur /work
+└── routes/
+    ├── work/            # une page par projet
+    ├── about/
+    └── contact/
+static/
+├── docs/                # CV en PDF
+└── img/                 # captures et visuels des projets
 ```
 
-You can preview the production build with `npm run preview`.
+Pour ajouter un projet : une entrée dans `src/lib/data/projects.ts` et une page dans `src/routes/work/<nom-du-projet>/`.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## Contact
+
+[LinkedIn](https://www.linkedin.com/in/maryline-biloa/) · [GitHub](https://github.com/marylineb)
