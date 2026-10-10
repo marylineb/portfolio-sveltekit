@@ -244,7 +244,7 @@
         <span class="btn-icon">→</span>
       </a>
       <a
-        href="https://github.com/marylineb/sakura-no-ban"
+        href="https://github.com/marylineb/jeu-plateau-royale"
         target="_blank"
         rel="noopener noreferrer"
         class="btn-secondary"
@@ -337,7 +337,7 @@
     </div>
 
     <div class="file-tree">
-      <div class="tree-root">sakura-no-ban/</div>
+      <div class="tree-root">jeu-plateau-royale/</div>
       {#each projectInfo.structure as item}
         <div class="tree-item">
           <span class="tree-branch">├─</span>

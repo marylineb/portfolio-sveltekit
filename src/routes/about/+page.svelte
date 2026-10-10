@@ -7,564 +7,589 @@
     gsap.registerPlugin(ScrollTrigger);
   }
 
-  let descriptionSection: HTMLElement;
-  let formationSection: HTMLElement;
-  let scrollLine: HTMLElement;
-  let scrollLineFill: HTMLElement;
+  const skills = [
+    { label: "Frontend", items: ["SvelteKit", "HTML / CSS", "JavaScript", "GSAP"] },
+    { label: "Backend", items: ["PHP", "Symfony", "Node.js", "SQL"] },
+    { label: "Outils", items: ["Figma", "VS Code", "Git", "Vercel"] },
+    { label: "Communication", items: ["Community Management", "Réseaux sociaux", "Stratégie éditoriale"] },
+  ];
 
   const formations = [
     {
-      position: "left",
-      image: "/img/moi2.jpeg",
-      text: "Bachelor 2 Développement Web — MyDigitalSchool Lyon (en cours). Spécialisation en développement web, avec une approche stratégique et créative.",
+      year: "2024 – présent",
+      degree: "Bachelor 2 Développement Web",
+      school: "MyDigitalSchool Lyon",
+      desc: "Spécialisation en développement web full-stack, UX/UI et stratégie digitale.",
     },
     {
-      position: "right",
-      image: "/img/MDS.webp",
-      text: "Bachelor 1 Développement Web — MyDigitalSchool Lyon. Initiation au développement web, à la communication digitale et au marketing, avec une approche créative et technique.",
+      year: "2023 – 2024",
+      degree: "Bachelor 1 Développement Web",
+      school: "MyDigitalSchool Lyon",
+      desc: "Initiation au développement web, communication digitale et marketing.",
     },
     {
-      position: "left",
-      image: "/img/ube.png",
-      text: "L1 Maths/Statistiques & Informatique — Université de Bertoua (Cameroun). Acquisition de bases solides en algorithmique, analyse de données et programmation.",
+      year: "2022 – 2023",
+      degree: "L1 Maths / Informatique",
+      school: "Université de Bertoua — Cameroun",
+      desc: "Bases solides en algorithmique, analyse de données et programmation.",
     },
     {
-      position: "right",
-      image: "/img/cabb.jpeg",
-      text: "Baccalauréat Série C — Collège Adventiste Bilingue de Bertoua (2023). Formation scientifique développant rigueur, logique et méthode, appliquées aujourd’hui à mes projets web et créatifs.",
+      year: "2023",
+      degree: "Baccalauréat Série C",
+      school: "Collège Adventiste Bilingue de Bertoua",
+      desc: "Formation scientifique — rigueur, logique et méthode.",
     },
   ];
 
+  let heroEl: HTMLElement;
+  let timelineItems: HTMLElement[] = [];
+  let timelineLine: HTMLElement;
+
   onMount(() => {
-    // Animation de la section description
-    if (descriptionSection) {
-      gsap.from(descriptionSection.querySelector("h1"), {
-        opacity: 0,
-        scale: 0.9,
-        duration: 1.2,
-        ease: "power3.out",
-      });
+    gsap.from(heroEl, { opacity: 0, y: 30, duration: 1, ease: "power3.out" });
 
-      gsap.from(descriptionSection.querySelector("div"), {
-        opacity: 0,
-        y: 40,
-        duration: 1,
-        delay: 0.4,
-        ease: "power3.out",
+    if (timelineLine) {
+      gsap.from(timelineLine, {
+        scrollTrigger: {
+          trigger: timelineLine,
+          start: "top 80%",
+          end: "bottom 20%",
+          scrub: 1,
+        },
+        scaleY: 0,
+        transformOrigin: "top center",
+        ease: "none",
       });
     }
 
-    // Animation de la ligne de scroll - AMÉLIORÉE
-    if (scrollLineFill && formationSection) {
-      gsap.to(scrollLineFill, {
-        scrollTrigger: {
-          trigger: formationSection,
-          start: "top center",
-          end: "bottom center",
-          scrub: 0.5, // Réduit pour plus de fluidité (était à 1)
-          // markers: true, // Décommentez pour déboguer
-        },
-        scaleY: 1,
-        ease: "power1.inOut", // Plus smooth qu'avant
-      });
-    }
+    timelineItems.forEach((item, i) => {
+      if (!item) return;
 
-    // Animation des sections de formation avec images
-    const contentElements = document.querySelectorAll(".content");
-    contentElements.forEach((section) => {
-      // Animation de la carte
-      gsap.from(section, {
-        scrollTrigger: {
-          trigger: section,
-          start: "top 85%",
-          end: "top 20%",
-          toggleActions: "play none none reverse",
-        },
+      const dot = item.querySelector(".timeline-dot");
+      const body = item.querySelector(".timeline-body");
+      const year = item.querySelector(".timeline-year");
+
+      gsap.from(dot, {
+        scrollTrigger: { trigger: item, start: "top 85%", toggleActions: "play none none reverse" },
+        scale: 0,
         opacity: 0,
-        y: 60,
-        scale: 0.95,
-        duration: 1,
+        duration: 0.4,
+        ease: "back.out(2)",
+      });
+
+      gsap.from(body, {
+        scrollTrigger: { trigger: item, start: "top 85%", toggleActions: "play none none reverse" },
+        opacity: 0,
+        x: 24,
+        duration: 0.65,
+        delay: 0.15,
         ease: "power3.out",
       });
 
-      // Animation de l'image séparée
-      const img = section.querySelector(".formation-image");
-      if (img) {
-        gsap.from(img, {
-          scrollTrigger: {
-            trigger: section,
-            start: "top 85%",
-            end: "top 20%",
-            toggleActions: "play none none reverse",
-          },
-          opacity: 0,
-          x: section.classList.contains("left") ? -50 : 50,
-          duration: 1.2,
-          delay: 0.2,
-          ease: "power3.out",
-        });
-      }
+      gsap.from(year, {
+        scrollTrigger: { trigger: item, start: "top 85%", toggleActions: "play none none reverse" },
+        opacity: 0,
+        y: -10,
+        duration: 0.5,
+        delay: 0.25,
+        ease: "power2.out",
+      });
     });
   });
 </script>
 
 <svelte:head>
-  <title>À propos | Maryline</title>
-  <meta
-    name="description"
-    content="Découvrez mon parcours, ma formation et mes passions."
-  />
+  <title>À propos | Maryline Biloa</title>
+  <meta name="description" content="Maryline Biloa — développeuse web, étudiante à MyDigitalSchool Lyon. Découvrez mon parcours et mes compétences." />
 </svelte:head>
 
-<main class="about-page">
-  <section id="description" bind:this={descriptionSection}>
-    <h1>MOI & MON PARCOURS</h1>
-    <div class="description-content">
-      <img src="/img/IMG-20241014-WA0030.jpg" alt="Maryline Biloa" />
-      <p>
-        Je m'appelle Maryline BILOA, étudiante en bachelor 2 à MyDigitalSchool
-        Lyon, une jeune créative passionnée par la technologie et l'art de
-        captiver les esprits. De culture asiatique, surtout japonaise, je suis
-        aussi une touche-à-tout curieuse, toujours en quête de nouvelles façons
-        d'explorer le monde numérique et les interactions humaines.
+<div class="about-page">
+
+  <!-- ── Hero ─────────────────────────── -->
+  <section class="about-hero" bind:this={heroEl}>
+    <!-- Colonne gauche : photo + identité -->
+    <div class="hero-left">
+      <div class="photo-wrap">
+        <img src="/img/IMG-20241014-WA0030.jpg" alt="Maryline Biloa" />
+      </div>
+    </div>
+
+    <!-- Colonne droite : bio + skills -->
+    <div class="hero-right">
+      <span class="eyebrow">Développeuse Web & Créative</span>
+      <h1>Maryline <em>Biloa</em></h1>
+
+      <p class="bio">
+        Étudiante en Bachelor 2 à MyDigitalSchool Lyon, je combine logique
+        informatique, sens du design et stratégie digitale pour créer des
+        expériences web qui ont de la personnalité.
         <br /><br />
-        Que ce soit pour créer des descriptions accrocheuses, concevoir des outils
-        interactifs, faire des sites qualitatifs ou écrire des contenus qui se connectent
-        vraiment avec leur public, je m'efforce de combiner créativité et praticité
-        dans tout ce que je fais.
-        <br /><br />
-        Mon univers gravite autour de la culture geek, de la communication bienveillante
-        et de l'envie de construire des ponts entre les idées et les gens. Si vous
-        cherchez un partenaire authentique pour donner vie à vos projets, je serai
-        ravie de collaborer avec vous ! 😊
+        Influencée par la culture japonaise et geek, j'aime les interfaces
+        soignées, les animations subtiles et les projets qui ont une vraie âme.
       </p>
+
+      <a href="/docs/marylinebiloaCV.pdf" download class="btn-cv">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Télécharger mon CV
+      </a>
+
+      <!-- Compétences -->
+      <div class="skills-grid">
+        {#each skills as skill}
+          <div class="skill-block">
+            <h3>{skill.label}</h3>
+            <ul>
+              {#each skill.items as item}
+                <li>{item}</li>
+              {/each}
+            </ul>
+          </div>
+        {/each}
+      </div>
     </div>
   </section>
 
-  <section id="separate">
-    <img src="/img/PHP-logo.svg.png" alt="" />
-    <img src="/img/icons8-figma-96.png" alt="" />
-    <img src="/img/icons8-code-studio-visuel-2019-96.png" alt="" />
-    <img src="/img/gsap (1).png" alt="" />
-    <img src="/img/favicon.svg" alt="" />
+  <!-- ── Outils / Techs ─────────────────── -->
+  <section class="tools-strip">
+    <span class="strip-label">Technologies utilisées</span>
+    <div class="tools-list">
+      <img src="/img/PHP-logo.svg.png" alt="PHP" title="PHP" />
+      <img src="/img/icons8-figma-96.png" alt="Figma" title="Figma" />
+      <img src="/img/icons8-code-studio-visuel-2019-96.png" alt="VS Code" title="VS Code" />
+      <img src="/img/gsap (1).png" alt="GSAP" title="GSAP" />
+      <img src="/img/favicon.svg" alt="SvelteKit" title="SvelteKit" />
+    </div>
   </section>
 
-  <section id="formation" bind:this={formationSection}>
-    <div class="scroll_line" bind:this={scrollLine}>
-      <div class="scroll_line_fill" bind:this={scrollLineFill}></div>
+  <!-- ── Parcours / Timeline ───────────── -->
+  <section class="timeline-section">
+    <div class="timeline-header">
+      <span class="eyebrow">Mon parcours</span>
+      <h2>Formation <em>&</em> Expérience</h2>
     </div>
 
-    <div id="scroll_text">
-      {#each formations as formation}
-        <section class="content {formation.position}">
-          <div class="formation-image">
-            <img src={formation.image} alt="Formation" />
+    <div class="timeline" bind:this={timelineLine}>
+      {#each formations as f, i}
+        <div class="timeline-item" bind:this={timelineItems[i]}>
+          <div class="timeline-dot"></div>
+          <div class="timeline-body">
+            <span class="timeline-year">{f.year}</span>
+            <h3 class="timeline-degree">{f.degree}</h3>
+            <p class="timeline-school">{f.school}</p>
+            <p class="timeline-desc">{f.desc}</p>
           </div>
-          <div class="formation-text">
-            <p>{formation.text}</p>
-          </div>
-        </section>
+        </div>
       {/each}
     </div>
   </section>
-  <section id="citation">
-    <p>« Avance. Même si tu ne sais pas encore où cela te mènera. »</p>
-    <span>— Shingeki no Kyojin</span>
+
+  <!-- ── Citation ──────────────────────── -->
+  <section class="quote-section">
+    <blockquote>
+      <p>« Avance. Même si tu ne sais pas encore où cela te mènera. »</p>
+      <cite>— Shingeki no Kyojin</cite>
+    </blockquote>
   </section>
-</main>
+
+</div>
 
 <style>
+  /* ── Page ── */
   .about-page {
-    padding: 180px 24px 40px; /* + haut pour laisser respirer sous le header */
+    background: var(--washi);
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    background-color: var(--washi);
-    color: var(--washi);
+    color: var(--encre);
   }
 
-  /* -------------------------
-   DESCRIPTION
-------------------------- */
-  #description {
-    max-width: 1200px;
-    text-align: center;
-    margin: 0 auto 6rem;
-    padding: 0 2rem;
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sakura-deep);
+    margin-bottom: 16px;
   }
 
-  #description h1 {
-    margin: 16px 0 40px 0;
-    color: var(--laque);
-    font-size: clamp(44px, 6vw, 92px);
-    font-family: "Cormorant Garamond", serif;
+  /* ── Hero ── */
+  .about-hero {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 80px;
+    align-items: start;
+    max-width: 1260px;
+    margin: 0 auto;
+    padding: 108px 48px 80px;
   }
 
-  #description h1::after {
-    content: "";
+  /* Photo */
+  .hero-left {
+    position: sticky;
+    top: 100px;
+  }
+
+  .photo-wrap {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--washi-mid);
+  }
+
+  .photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
-    width: min(400px, 80vw);
-    height: 2.6px;
-    background: linear-gradient(90deg, transparent, var(--sakura), transparent);
-    margin: 8px auto 0;
+    transition: transform 0.6s ease;
   }
 
-  /* ✅ UN SEUL bloc description-content (fusion) */
-  .description-content {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 100%;
-    gap: 56px;
-    margin: 24px auto 0;
-    padding: 36px 24px;
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(242, 167, 187, 0.35);
-    border-radius: 20px;
-    box-shadow: var(--ombre-sm);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-
-    transition:
-      transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-      box-shadow 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-      border-color 0.3s ease,
-      background 0.3s ease;
+  .photo-wrap:hover img {
+    transform: scale(1.03);
   }
 
-  /* petite déco sakura */
-  .description-content::before {
-    content: "✿";
-    position: absolute;
-    top: 12px;
-    right: 16px;
-    font-size: 1rem;
-    color: var(--sakura);
-    opacity: 0.32;
-    transition:
-      opacity 0.3s ease,
-      transform 0.35s ease;
+  /* Bio */
+  .hero-right h1 {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(40px, 5vw, 72px);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--laque-dark);
+    margin-bottom: 28px;
   }
 
-  .description-content:hover {
-    border-color: var(--sakura);
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: var(--ombre-sakura);
-    background: rgba(255, 255, 255, 0.94);
-  }
-
-  .description-content:hover::before {
-    opacity: 0.75;
-    transform: rotate(22deg) scale(1.4);
-  }
-
-  .description-content img {
-    width: min(420px, 100%);
-    height: 420px;
-    object-fit: cover;
-    border-radius: 16px;
-    border: 1px solid rgba(242, 167, 187, 0.25);
-    box-shadow: var(--ombre-sakura);
-  }
-
-  .description-content p {
-    font-size: 16px;
-    font-family: "serif";
-    text-align: center;
-    line-height: 1.9;
-    color: var(--encre);
-    max-width: 650px;
-    margin: 0;
-    text-align: center;
-  }
-
-  /* -------------------------
-   SEPARATE (icônes)
-------------------------- */
-  #separate {
-    display: flex;
-    justify-content: space-evenly; 
-    align-items: center;
-    gap: 36px; 
-    width: 100%;
-    padding: 18px 12px;
-    border: 1px solid rgba(250, 243, 240, 0.14);
-    background: var(--case-claire); 
-    box-shadow: var(--ombre-sm);
-    margin: 24px auto 24px;
-  }
-
-  #separate img {
-    width: 72px;
-    height: 72px;
-    display: block; 
-    object-fit: contain; /* évite crop */
-    opacity: 0.92;
-
-    filter: drop-shadow(0 0 10px rgba(242, 167, 187, 0.12));
-    transition:
-      transform 0.2s ease,
-      opacity 0.2s ease,
-      filter 0.2s ease;
-  }
-
-  #separate img:hover {
-    transform: translateY(-2px) scale(1.04);
-    opacity: 1;
-    filter: drop-shadow(0 0 14px rgba(143, 179, 128, 0.22));
-  }
-
-  /* -------------------------
-   FORMATION (timeline)
-------------------------- */
-  #formation {
-    position: relative;
-    max-width: 1200px;
-    margin: 80px auto 0;
-    padding: 0 2rem 2rem;
-  }
-
-  /* Ligne verticale */
-  .scroll_line {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    width: 6px;
-    height: calc(100% - 120px);
-    background: rgba(143, 179, 128, 0.18); /* bambou léger */
-    transform: translateX(-50%);
-    border-radius: 999px;
-  }
-
-  .scroll_line_fill {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(180deg, transparent, var(--bambou)
-    );
-    transform-origin: top;
-    transform: scaleY(0);
-    border-radius: 999px;
-    box-shadow: 0 0 14px rgba(143, 179, 128, 0.28);
-  }
-
-  #scroll_text {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Cartes formation */
-  .content {
-    display: flex;
-    align-items: center;
-    gap: 2.5rem;
-    margin-bottom: 4.5rem;
-    padding: 1.8rem;
-    border-color: var(--sakura);
-    box-shadow: var(--ombre-sakura);
-    background: rgba(255, 255, 255, 0.94);
-    border-radius: 25px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(242, 167, 187, 0.35);
-  }
-
-  .content.left {
-    margin-right: auto;
-    width: 56%;
-    flex-direction: row;
-  }
-
-  .content.right {
-    margin-left: auto;
-    width: 56%;
-    flex-direction: row-reverse;
-  }
-
-  /* Image formation */
-  .formation-image {
-    flex: 0 0 200px;
-    height: 200px;
-    overflow: hidden;
-    border-radius: 14px;
-    border: 1px solid rgba(242, 167, 187, 0.22);
-    box-shadow: var(--ombre-sakura);
-  }
-
-  .formation-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Texte formation */
-  .formation-text {
-    flex: 1;
-  }
-
-  .content p {
-    font-family:  "serif";
-    font-size: 16px;
-    line-height: 1.85;
-    color: var(--encre);
-    margin: 0;
-  }
-
-  /* -------------------------
-   CITATION
-------------------------- */
-  #citation {
-    text-align: center;
-    margin: 48px auto 0;
-    padding: 0 2rem;
-    max-width: 760px;
-
-    opacity: 0;
-    animation: fadeInUp 1.8s ease forwards;
-    animation-delay: 1.2s;
-    transform: translateY(30px);
-  }
-
-  #citation p {
-    font-size: 20px;
-    font-family: "Cormorant Garamond", serif;
-    color: var(--bambou);
+  .hero-right h1 em {
     font-style: italic;
-    margin-bottom: 0.8rem;
-    text-shadow: 0 0 16px rgba(143, 179, 128, 0.15);
-  }
-
-  #citation span {
-    font-size: 16px;
-    font-family: "cormorant garamond", serif;
     color: var(--sakura-deep);
   }
 
-  /* -------------------------
-   RESPONSIVE
-------------------------- */
-
-/* Tablet (≤ 1024px) */
-@media (max-width: 1024px) {
-  .about-page {
-    padding: 110px 20px 50px;
+  .bio {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--encre-mid);
+    max-width: 540px;
+    margin-bottom: 32px;
   }
 
-  #description {
-    margin-bottom: 4rem;
-    padding: 0 1.2rem;
+  .btn-cv {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 12px 28px;
+    border: 1px solid var(--laque-dark);
+    color: var(--laque-dark);
+    background: transparent;
+    border-radius: 2px;
+    transition: all 0.25s ease;
+    margin-bottom: 52px;
   }
 
-  .description-content {
+  .btn-cv:hover {
+    background: var(--laque-dark);
+    color: var(--washi);
+  }
+
+  /* Skills */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px 40px;
+    border-top: 1px solid rgba(196, 96, 122, 0.15);
+    padding-top: 36px;
+  }
+
+  .skill-block h3 {
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sakura-deep);
+    margin-bottom: 12px;
+  }
+
+  .skill-block ul {
+    list-style: none;
+    display: flex;
     flex-direction: column;
-    gap: 18px;
-    padding: 22px 18px;
+    gap: 6px;
   }
 
-  .description-content img {
-    width: 100%;
-    height: 320px;
+  .skill-block li {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--encre);
+    padding-left: 14px;
+    position: relative;
   }
 
-  .description-content p {
-    text-align: center;
+  .skill-block li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--sakura-deep);
+    border-radius: 50%;
   }
 
-  #separate {
-    gap: 18px;
+  /* ── Tools Strip ── */
+  .tools-strip {
+    border-top: 1px solid rgba(196, 96, 122, 0.12);
+    border-bottom: 1px solid rgba(196, 96, 122, 0.12);
+    background: rgba(253, 232, 239, 0.3);
+    padding: 28px 48px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .strip-label {
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--encre-mid);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .tools-list {
+    display: flex;
+    align-items: center;
+    gap: 32px;
     flex-wrap: wrap;
   }
 
-  #separate img {
-    width: 62px;
-    height: 62px;
+  .tools-list img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    opacity: 0.65;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    filter: grayscale(20%);
   }
 
-  /* Timeline => full width */
-  #formation {
-    padding: 0 1.2rem 2rem;
+  .tools-list img:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+    filter: none;
   }
 
-  .scroll_line {
-    display: none;
+  /* ── Timeline ── */
+  .timeline-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 100px 48px 80px;
   }
 
-  .content {
-    width: 100% !important;
-    flex-direction: column !important;
-    margin: 0 0 3rem 0;
-    gap: 1.2rem;
+  .timeline-header {
+    margin-bottom: 60px;
   }
 
-  .formation-image {
-    width: 100%;
-    height: 220px;
-    flex: 0 0 auto;
-  }
-}
-
-/* Mobile (≤ 768px) */
-@media (max-width: 768px) {
-  #description h1 {
-    font-size: clamp(2.1rem, 8vw, 3rem);
+  .timeline-header h2 {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.1;
+    color: var(--laque-dark);
+    margin-top: 8px;
   }
 
-  .description-content {
-    padding: 18px 14px;
+  .timeline-header h2 em {
+    font-style: italic;
+    color: var(--sakura-deep);
   }
 
-  .description-content img {
-    height: 280px;
+  /* Timeline items */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    padding-left: 2px;
   }
 
-  .content {
-    padding: 1.2rem;
-    border-radius: 18px;
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      var(--sakura-deep),
+      rgba(196, 96, 122, 0.08)
+    );
+    transform-origin: top center;
   }
 
-  .content p {
-    font-size: 0.95rem;
-    line-height: 1.75;
+  .timeline-item {
+    display: flex;
+    gap: 32px;
+    padding-bottom: 48px;
+    position: relative;
   }
 
-  #citation p {
-    font-size: 18px;
+  .timeline-dot {
+    flex-shrink: 0;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--sakura-deep);
+    border: 2px solid var(--washi);
+    outline: 1px solid var(--sakura-deep);
+    margin-top: 6px;
+    position: relative;
+    left: -4px;
   }
 
-  #citation span {
-    font-size: 15px;
-  }
-}
-
-/* Small mobile (≤ 540px) */
-@media (max-width: 540px) {
-  .about-page {
-    padding: 100px 12px 40px;
+  .timeline-body {
+    flex: 1;
+    padding-bottom: 0;
   }
 
-  #description {
-    padding: 0 0.6rem;
+  .timeline-year {
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sakura-deep);
+    display: block;
+    margin-bottom: 8px;
   }
 
-  .description-content img {
-    height: 240px;
+  .timeline-degree {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.25rem;
+    color: var(--encre);
+    margin-bottom: 4px;
   }
 
-  #separate img {
-    width: 54px;
-    height: 54px;
+  .timeline-school {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--encre-mid);
+    margin-bottom: 10px;
   }
 
-  .content {
-    padding: 1rem;
+  .timeline-desc {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--encre-mid);
+    line-height: 1.7;
   }
 
-  .formation-image {
-    height: 200px;
+  /* ── Citation ── */
+  .quote-section {
+    text-align: center;
+    padding: 60px 48px 100px;
+    border-top: 1px solid rgba(196, 96, 122, 0.12);
   }
-}
+
+  blockquote {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  blockquote p {
+    font-family: var(--font-serif);
+    font-size: clamp(18px, 2.5vw, 26px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--laque);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  blockquote cite {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sakura-deep);
+    font-style: normal;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
+    .about-hero {
+      grid-template-columns: 320px 1fr;
+      gap: 48px;
+      padding: 110px 32px 60px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .about-hero {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding: 100px 24px 48px;
+    }
+
+    .hero-left {
+      position: static;
+    }
+
+    .photo-wrap {
+      aspect-ratio: 4 / 3;
+      max-height: 300px;
+    }
+
+    .hero-right h1 {
+      font-size: clamp(32px, 9vw, 52px);
+    }
+
+    .skills-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .tools-strip {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 24px;
+    }
+
+    .timeline-section {
+      padding: 60px 24px 60px;
+    }
+
+    .quote-section {
+      padding: 40px 24px 60px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .skills-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .btn-cv {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 </style>
